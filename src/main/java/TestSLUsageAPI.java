@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 import com.sun.xml.internal.ws.client.BindingProviderProperties;
 import org.apache.commons.codec.binary.Base64;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestSLUsageAPI {
@@ -16,7 +17,7 @@ public class TestSLUsageAPI {
 
     public String getUsage(String userName, String accesskey) throws Exception {
         String sauceRestActivityUrl = "https://saucelabs.com/rest/v1/%s/activity";
-        AtomicInteger retries = new AtomicInteger(120);
+        AtomicInteger retries = new AtomicInteger(5);
         // Create JAX-RS client Jersey
         Client sauceUsageAPIClient = ClientBuilder.newClient();
         sauceUsageAPIClient.property(BindingProviderProperties.CONNECT_TIMEOUT, 300000);
@@ -55,7 +56,7 @@ public class TestSLUsageAPI {
                         if (retries.getAndDecrement() == 0) {
                             break;
                         }
-                        Thread.sleep(30000);
+                        Thread.sleep(TimeUnit.SECONDS.toMillis(timeToRetry));
                     } else {
                         throw new Exception("Error in fetching account usage . Response status code is " + respCode);
                     }

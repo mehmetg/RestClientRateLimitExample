@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by mehmetgerceker on 5/2/16.
  */
@@ -11,9 +13,11 @@ public class RestExecutor {
             System.exit(1);
         }
         TestSLUsageAPI api = new TestSLUsageAPI();
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 1000; i++) {
+            System.out.format("Executing request %d\n", i);
             try {
-                System.out.println(String.format("%d: %s", System.nanoTime()/1000000000, api.getUsage(username, accessKey)));
+                System.out.println(String.format("%d: %s",
+                        TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()), api.getUsage(username, accessKey)));
                 System.out.println("Success!");
             } catch (Exception e) {
                 e.printStackTrace();
